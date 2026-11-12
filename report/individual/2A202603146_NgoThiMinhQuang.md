@@ -30,28 +30,34 @@ Export lỗi: **Chưa được xác minh** (tôi chưa ghi nhận cụ thể vi�
 
 ## 2. Một quyết định trước khi dùng gợi ý
 
-Yêu cầu: object đầu tiên tôi tự vẽ ở `medium_instance` (trước khi xem đề xuất tự động cho object đó). Tôi có sử dụng **SAM3 như công cụ hỗ trợ trong quá trình annotation**. Dữ liệu nộp hiện không đủ để xác minh chi tiết việc tôi tự vẽ hoàn toàn object đầu tiên trước gợi ý.
+**Yêu cầu rubric/mục này:** ghi object đầu tiên tôi tự vẽ ở `medium_instance` trước khi xem đề xuất tự động cho object đó (ảnh/vị trí, class, quy tắc biên) và cách tôi xử lý gợi ý sau đó (nếu có).
+
+**Mức độ đáp ứng / giới hạn thông tin:** Tôi có sử dụng **SAM3 như công cụ hỗ trợ trong quá trình annotation**, nhưng tôi **chưa có bằng chứng/ghi nhận cụ thể** để xác minh việc tôi đã tự vẽ hoàn toàn object đầu tiên trước gợi ý và các quyết định chi tiết tương ứng. Tôi **không bịa** thao tác hay trải nghiệm chưa được xác minh.
 
 - Ảnh, vị trí và object Medium đầu tiên tôi tự vẽ: **Chưa được xác minh** (chưa xác định được ảnh cụ thể trong `000000181542.jpg` / `000000373353.jpg` / `000000458325.jpg`, vị trí/object).
-- Class và quy tắc tôi dùng để chọn biên: **Chưa được xác minh**. Về nguyên tắc của bài, class thuộc `person/bicycle/car/motorcycle/bus/truck` và biên cần bám phần nhìn thấy của object (không vẽ phần bị che/bối cảnh), nhưng quyết định cụ thể của tôi chưa được ghi nhận.
-- Khi tôi dùng SAM3/gợi ý sau đó: vùng gợi ý sai/đúng, hành động tôi sửa/giữ và lý do: **Chưa được xác minh** (tôi chưa ghi nhận cụ thể trường hợp SAM3 gợi ý đúng/sai, cũng như việc tôi sửa hay giữ và lý do). Tôi không ghi "không dùng" vì tôi có sử dụng SAM3 hỗ trợ.
-- Nếu không dùng gợi ý: **Không áp dụng** (tôi có dùng SAM3 hỗ trợ). Một quyết định gán nhãn cụ thể của tôi ngoài thông tin trên: **chưa được xác minh**.
+- Class và quy tắc tôi dùng để chọn biên: **Chưa được xác minh**. (Nguyên tắc bài: class thuộc `person/bicycle/car/motorcycle/bus/truck`, biên bám phần nhìn thấy của object, không vẽ phần bị che/bối cảnh — đây là quy tắc tham chiếu, không phải ghi nhận quyết định cụ thể của tôi.)
+- Khi tôi dùng SAM3/gợi ý sau đó: vùng gợi ý sai/đúng, hành động tôi sửa/giữ và lý do: **Chưa được xác minh** (chưa ghi nhận cụ thể). Tôi không ghi "không dùng" vì tôi có sử dụng SAM3 hỗ trợ.
+- Nếu không dùng gợi ý: **Không áp dụng** (tôi có dùng SAM3 hỗ trợ). Quyết định gán nhãn cụ thể khác của tôi: **chưa được xác minh**.
 
 ## 3. Một lỗi tôi tìm thấy và sửa
 
-Tôi quyết định **giữ nguyên kết quả, không sửa annotation/ZIP sau khi phát hiện**. Vì vậy tôi không ghi là đã sửa khi thực tế tôi chưa sửa.
+**Yêu cầu rubric/mục này:** nêu một lỗi **có thật** đã tìm thấy và cách sửa (task/ảnh/vùng, loại, bằng chứng, quy tắc/hành động, Save/export). Nếu chưa sửa được phải ghi rõ, không ghi "đã sửa" khi chưa sửa.
 
-- Task/ảnh/vùng: **Chưa được xác minh**. (Tham chiếu khi đối chiếu lại: `medium_instance` cho thấy dấu hiệu nhiều instance thừa/FP, đặc biệt ảnh `000000373353.jpg` — `reports/error_localization/ERROR_LOCALIZATION.md` — nhưng tôi chưa xác nhận đây là lỗi tôi tự phát hiện trong quá trình làm, cũng như vùng cụ thể tôi quan sát.)
-- Lỗi thuộc loại: **Chưa được xác minh** (loại lỗi tôi thực tế quan sát chưa được ghi nhận). Dấu hiệu từ phân tích cho thấy vấn đề thiếu-thừa vật/gộp-tách/biên (FP 52, submitted 116 vs GT 71), nhưng đây là kết quả đối chiếu hậu kiểm.
-- Bằng chứng tôi nhìn thấy: **Chưa được xác minh** (tôi chưa ghi nhận bằng chứng cụ thể tôi quan sát trên CVAT trong quá trình làm).
-- Quy tắc và hành động sửa: **Tôi không thực hiện sửa** (tôi giữ nguyên kết quả). Nếu sửa, hướng xử lý phù hợp theo quy tắc là xóa mask thừa, gộp mảnh cùng object, tách mask gộp nhiều object, chỉnh biên theo phần nhìn thấy. Việc tôi từng thử sửa trong quá trình làm trước khi export cuối hay không: **chưa được xác minh**.
-- Sau sửa đã Save và export lại chưa? **Tôi không thực hiện chỉnh sửa sau khi đối chiếu (tôi giữ nguyên ZIP hiện tại).** Việc tôi có lần Save/export lại nào khác trong quá trình làm hay không: **chưa được xác minh**.
+**Mức độ đáp ứng / giới hạn thông tin:** Tôi **đã xác nhận không sửa annotation trên CVAT sau khi hoàn thành/export** và tôi **giữ nguyên 9 ZIP**. Tôi **không có bằng chứng xác minh** một lỗi cụ thể do tôi phát hiện trong quá trình làm (trước export cuối) cùng các thao tác sửa tương ứng; do đó tôi **không bịa** lỗi hay thao tác sửa. (Các sai lệch được nêu dưới đây chỉ là tham chiếu từ đối chiếu hậu kiểm với GT/scorer, không phải ghi nhận tôi đã phát hiện và sửa trong lúc làm.)
+
+- Task/ảnh/vùng: **Chưa được xác minh** là lỗi tôi tự phát hiện trong quá trình làm. (Tham chiếu đối chiếu hậu kiểm: `medium_instance` có dấu hiệu nhiều instance thừa/FP, đặc biệt ảnh `000000373353.jpg` — `reports/error_localization/ERROR_LOCALIZATION.md`.)
+- Lỗi thuộc loại: **Chưa được xác minh** (quan sát thực tế của tôi trong lúc làm chưa được ghi nhận). Tham chiếu hậu kiểm cho thấy thiếu-thừa vật/gộp-tách/biên (FP 52, submitted 116 vs GT 71).
+- Bằng chứng tôi nhìn thấy: **Chưa được xác minh** (chưa ghi nhận bằng chứng cụ thể tôi quan sát trên CVAT trong quá trình làm).
+- Quy tắc và hành động sửa: **Tôi không thực hiện sửa trên CVAT sau khi hoàn thành** (giữ nguyên kết quả/ZIP). Hướng xử lý phù hợp theo quy tắc (nếu sửa): xóa mask thừa, gộp mảnh cùng object, tách mask gộp nhiều object, chỉnh biên theo phần nhìn thấy. Việc tôi từng thử sửa trong quá trình làm trước khi export cuối hay không: **chưa được xác minh**.
+- Sau sửa đã Save và export lại chưa? **Không áp dụng/không thực hiện** (tôi không sửa sau khi hoàn thành; ZIP hiện tại được giữ nguyên). Việc có lần Save/export lại nào khác trong quá trình làm: **chưa được xác minh**.
 
 Kết quả liên quan (tự đánh giá): tôi đã tự đánh giá 3 tier bằng Ground Truth do giảng viên cung cấp và scorer chính thức → easy_semantic 17.2/20 (mIoU 0.787), medium_instance 21.6/32 (P@0.5 0.55, R@0.5 0.90, TP/FP/FN 64/52/7), hard_panoptic 13.8/30 (PQ 0.408) — **tổng 52.6/82** (chưa phải điểm cuối trên 100). Tôi không tự ghi PASS/top 3/bonus và không đưa file ground truth vào fork. (Các công cụ khác, nếu có, tôi chỉ dùng để hỗ trợ kiểm tra, phân tích và hoàn thiện báo cáo.)
 
 ## 4. Ba ca chưa chắc hoặc đã cân nhắc
 
-Tôi chưa có ghi nhận xác thực về ba ca tôi đã cân nhắc trong quá trình làm; vì vậy các ca dưới đây chỉ được nêu như các tình huống phân vân điển hình theo quy tắc bài (không khẳng định là trải nghiệm đã xảy ra của tôi). Quyết định/câu hỏi của tôi cho từng ca: **chưa được xác minh**.
+**Yêu cầu rubric/mục này:** nêu ba ca (vùng cụ thể) có hai cách hiểu, kèm quy tắc/chứng cứ và quyết định hoặc câu hỏi cho coach (ca đã quyết định được cũng hợp lệ; không cần là lỗi).
+
+**Mức độ đáp ứng / giới hạn thông tin:** Tôi **chưa có ghi nhận xác thực** về ba ca tôi đã cân nhắc trong quá trình làm; tôi **không tự tạo tình huống cá nhân** hay bịa trải nghiệm. Các ca dưới đây được nêu như **tình huống phân vân điển hình theo quy tắc/guideline của bài** (tham chiếu ảnh/vị trí trong dữ liệu) để đối chiếu quy tắc — **không khẳng định** là trải nghiệm đã xảy ra của tôi. Quyết định/câu hỏi của tôi cho từng ca: **chưa được xác minh**.
 
 | Ảnh/vị trí | Hai cách hiểu có thể | Quy tắc/chứng cứ | Quyết định hoặc câu hỏi cho coach |
 | --- | --- | --- | --- |

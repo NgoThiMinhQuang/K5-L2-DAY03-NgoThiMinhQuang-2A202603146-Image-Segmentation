@@ -1,5 +1,56 @@
-# Bài thực hành Day 3 — Segmentation
+# Bài thực hành Day 3 — Image Segmentation (K5 · Level 2 · Day03)
 
+## Thông tin bài nộp (học viên)
+- **Học viên:** Ngô Thị Minh Quang
+- **MSSV/Mã học viên:** 2A202603146
+- **Repository (fork):** https://github.com/NgoThiMinhQuang/K5-L2-DAY03-NgoThiMinhQuang-2A202603146-Image-Segmentation
+- **Báo cáo cá nhân:** [`report/individual/2A202603146_NgoThiMinhQuang.md`](report/individual/2A202603146_NgoThiMinhQuang.md)
+
+### Mô tả 3 tier và 6 checkpoint
+- **3 tier (ba mức bài chính):**
+  - `easy_semantic` (Semantic, 3 ảnh, 20 điểm): phân vùng theo lớp `road`, `sidewalk`, `building`, `vegetation`, `sky`; export **Segmentation mask 1.1**.
+  - `medium_instance` (Instance, 3 ảnh, 32 điểm): tách từng đối tượng đếm được (6 lớp theo `classes.json` của task), mỗi vật một mask; export **COCO 1.0**.
+  - `hard_panoptic` (Panoptic, 2 ảnh, 30 điểm): kết hợp stuff và things (12 lớp theo `classes.json`), things tách instance, hạn chế bỏ trống/chồng lấn; export **COCO 1.0**.
+- **6 checkpoint (mỗi trạm 1 ảnh, 3 điểm/trạm):**
+  - `cp1_holes` (COCO 1.0): xử lý lỗ/kính/chi tiết trong mask.
+  - `cp2_slice` (COCO 1.0): tách hai vật sát nhau thành hai instance.
+  - `cp3_thin` (Segmentation mask 1.1): vẽ nét mảnh (cột/biển) ở zoom lớn.
+  - `cp4_curb` (Segmentation mask 1.1): ranh road–sidewalk theo bó vỉa/chức năng.
+  - `cp5_occlusion` (COCO 1.0): giữ một instance cho các phần nhìn thấy của cùng vật bị che.
+  - `cp6_coverage` (Segmentation mask 1.1): phủ vùng nhìn thấy thuộc schema.
+
+### Cấu trúc thư mục `submissions/`
+```text
+submissions/
+  easy_semantic.zip
+  medium_instance.zip
+  hard_panoptic.zip
+  cp1_holes.zip
+  cp2_slice.zip
+  cp3_thin.zip
+  cp4_curb.zip
+  cp5_occlusion.zip
+  cp6_coverage.zip
+```
+(9/9 file ZIP đã export từ CVAT, giữ nguyên nội dung.)
+
+### Kết quả tự đánh giá
+- **Tự đánh giá (Ground Truth do giảng viên cung cấp, scorer chính thức, 3 tier):** Easy Semantic **17.2/20**, Medium Instance **21.6/32**, Hard Panoptic **13.8/30** → **Tổng 52.6/82**.
+- **6 checkpoint:** cấu trúc ZIP/format đã kiểm tra (inspect OK), **chưa có điểm định lượng** (chưa có GT/tiêu chí chấm định lượng chính thức tương ứng).
+- Đây là **kết quả tự đánh giá**, **không phải điểm chính thức** của giảng viên. Không tự nhận PASS/top 3/bonus. Không thay đổi annotation/ZIP/điểm.
+
+### Hướng dẫn kiểm tra dữ liệu
+Từ thư mục gốc repo:
+```bash
+python scripts/inspect_submissions.py --dir submissions
+```
+`OK` nghĩa là ZIP đọc được và khớp hợp đồng ảnh/class/mask. (Kết quả kiểm tra gần nhất: 9/9 OK, 14/14 ảnh, 0 lỗi cấu trúc.)
+
+> Lưu ý: Không đưa Ground Truth, secret/token/`.env`, model weights, cache/`*.part`, `.venv` hoặc dữ liệu nhạy cảm vào repository công khai.
+
+---
+
+## Thông tin đề bài (tham khảo)
 
 **K5 · Level 2 · Day03 · Bài cá nhân.**
 
