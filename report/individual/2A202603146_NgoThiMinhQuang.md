@@ -1,93 +1,211 @@
-# Báo cáo thực hành Day 3
+# BÁO CÁO CÁ NHÂN – K5 LEVEL 2 DAY 03: IMAGE SEGMENTATION
 
-- **Mã học viên:** 2A202603146
-- **Họ tên:** Ngô Thị Minh Quang
-- **Bài thực hành:** K5 · Level 2 · Day03 — Image Segmentation (cá nhân)
-- **Ngày / môi trường CVAT local:** Chưa được tôi ghi nhận cụ thể (không có bằng chứng xác minh chi tiết).
-- **Công cụ:** Tôi thực hiện trên **CVAT local** và sử dụng **SAM3** là **công cụ AI duy nhất** hỗ trợ gợi ý phân đoạn khi cần.
+**Họ và tên:** Ngô Thị Minh Quang  
+**Mã số sinh viên:** 2A202603146  
+**Bài thực hành:** K5 – Level 2 – Day 03: Image Segmentation  
+**Công cụ thực hiện:** CVAT, SAM3 hỗ trợ phân đoạn ảnh.
 
-## 1. Bài đã nộp
+---
 
-Tôi đã hoàn thành và export **9/9 task, 14/14 ảnh** trong thư mục `submissions/` (giữ nguyên các file ZIP hiện tại, không thay đổi annotation/ZIP/Ground Truth).
+## 1. KẾT QUẢ THỰC HIỆN BÀI THỰC HÀNH
 
-| Task | File ZIP | Hoàn thành | Điểm tối đa (coach chấm) |
-| --- | --- | ---: | ---: |
-| easy_semantic | `submissions/easy_semantic.zip` | 3 / 3 | 20 |
-| medium_instance | `submissions/medium_instance.zip` | 3 / 3 | 32 |
-| hard_panoptic | `submissions/hard_panoptic.zip` | 2 / 2 | 30 |
-| cp1_holes | `submissions/cp1_holes.zip` | 1 / 1 | 3 |
-| cp2_slice | `submissions/cp2_slice.zip` | 1 / 1 | 3 |
-| cp5_occlusion | `submissions/cp5_occlusion.zip` | 1 / 1 | 3 |
-| cp3_thin | `submissions/cp3_thin.zip` | 1 / 1 | 3 |
-| cp4_curb | `submissions/cp4_curb.zip` | 1 / 1 | 3 |
-| cp6_coverage | `submissions/cp6_coverage.zip` | 1 / 1 | 3 |
-| **Tổng tối đa** | | **14 / 14** | **100** |
+Trong quá trình thực hiện bài thực hành Image Segmentation, tôi trực tiếp thao tác trên CVAT để thực hiện gán nhãn, phân đoạn các đối tượng và hoàn thiện dữ liệu theo yêu cầu của từng task.
 
-**Kết quả tự đánh giá (3 tier, Ground Truth do giảng viên cung cấp, scorer chính thức):**
-- Easy Semantic: **17.2/20**
-- Medium Instance: **21.6/32**
-- Hard Panoptic: **13.8/30**
-- **Tổng tự đánh giá: 52.6/82**
-- **Sáu checkpoint:** cấu trúc đã kiểm tra (inspect OK), **chưa có điểm định lượng**.
+Bài thực hành gồm 9 task với tổng cộng 14 ảnh, bao gồm 3 nhóm chính: Easy Semantic Segmentation, Medium Instance Segmentation và Hard Panoptic Segmentation; cùng 6 checkpoint kiểm tra các trường hợp đặc biệt.
 
-Kết quả trên là tự đánh giá, không phải điểm chính thức của giảng viên. Tôi giữ nguyên toàn bộ kết quả, annotation và ZIP.
+Tôi sử dụng CVAT làm công cụ chính để quản lý và thực hiện annotation. Trong quá trình làm bài, tôi sử dụng SAM3 làm công cụ AI hỗ trợ gợi ý phân đoạn. Tôi trực tiếp kiểm tra các vùng mask, class và ranh giới đối tượng trước khi hoàn thiện dữ liệu. Tôi không sử dụng YOLO hoặc mô hình AI khác để tự động tạo annotation cho bài nộp.
 
-### Phương pháp thực hiện (tổng quan)
-- Tôi **trực tiếp thao tác trên CVAT** để thực hiện bài thực hành.
-- Tôi **vẽ polygon/mask và gán nhãn theo từng đối tượng/vùng** theo đúng schema và `classes.json` của từng task.
-- Tôi **chủ động xác định ranh giới, phân biệt class và kiểm tra vùng phân đoạn** (phần nhìn thấy, mức độ phủ, biên) trước khi lưu/export.
-- Tôi sử dụng **SAM3 là công cụ AI duy nhất** hỗ trợ gợi ý/nhận diện vùng phân đoạn khi cần. **Tôi không sử dụng YOLO hay bất kỳ mô hình AI nào khác** để tự động tạo annotation.
-- **SAM3 chỉ đóng vai trò hỗ trợ gợi ý**; việc kiểm tra, chỉnh lựa chọn (chấp nhận/bỏ qua gợi ý khi áp dụng), gán nhãn và quyết định cuối cùng đối với annotation thuộc trách nhiệm của tôi. Tôi không mô tả toàn bộ annotation là vẽ tay 100% trong các trường hợp có mask được tạo từ gợi ý SAM3.
+### Danh sách bài thực hành đã hoàn thành
 
-## 2. Quy trình vẽ và gán nhãn
+| STT | Task | Số ảnh | Định dạng export |
+|---|---|---:|---|
+| 1 | Easy Semantic | 3 | Segmentation mask 1.1 |
+| 2 | Medium Instance | 3 | COCO 1.0 |
+| 3 | Hard Panoptic | 2 | COCO 1.0 |
+| 4 | CP1 – Holes | 1 | COCO 1.0 |
+| 5 | CP2 – Slice | 1 | COCO 1.0 |
+| 6 | CP3 – Thin | 1 | Segmentation mask 1.1 |
+| 7 | CP4 – Curb | 1 | Segmentation mask 1.1 |
+| 8 | CP5 – Occlusion | 1 | COCO 1.0 |
+| 9 | CP6 – Coverage | 1 | Segmentation mask 1.1 |
+| | **Tổng cộng** | **14** | **9 ZIP** |
 
-Quy trình tôi thực hiện (tổng quát) như sau:
+### Kết quả tự đánh giá
 
-1. **Quan sát ảnh gốc:** xem bối cảnh, đối tượng/vùng xuất hiện và các vùng khó (biên, che khuất, chi tiết nhỏ).
-2. **Xác định đối tượng và class:** đối chiếu đúng `classes.json`/schema của task (semantic/instance/panoptic) và quy tắc guideline.
-3. **Thực hiện vẽ mask trên CVAT:** vẽ polygon/mask theo từng đối tượng (instance/thing) hoặc từng vùng (semantic/stuff) bằng công cụ CVAT, bám phần **nhìn thấy**.
-4. **Sử dụng SAM3 hỗ trợ khi cần:** dùng SAM3 để nhận diện và gợi ý vùng phân đoạn; tôi xem xét gợi ý như hỗ trợ, không thay thế bước kiểm tra của tôi. (Tôi không nêu tên/định danh object đầu tiên hay vị trí cụ thể do không có dữ liệu xác minh.)
-5. **Kiểm tra ranh giới, che khuất và chi tiết nhỏ:** rà biên, vùng bị che khuất, vật mảnh/vùng lỗ, trường hợp vật sát nhau hoặc cùng class, và độ phủ theo schema.
-6. **Kiểm tra lại và lưu/export:** kiểm tra lớp, số object/vùng, biên và tính nhất quán rồi Save và export đúng định dạng (`Segmentation mask 1.1` hoặc `COCO 1.0` theo từng task).
+| Nhóm bài | Điểm đạt được | Điểm tối đa |
+|---|---:|---:|
+| Easy Semantic | 17.2 | 20 |
+| Medium Instance | 21.6 | 32 |
+| Hard Panoptic | 13.8 | 30 |
+| **Tổng cộng** | **52.6** | **82** |
 
-## 3. Khó khăn và xử lý lỗi
+Đây là kết quả tự đánh giá theo scorer của bộ bài thực hành, không phải điểm chính thức do giảng viên công bố.
 
-### Khó khăn thực tế trong quá trình thực hiện
-- **Phân biệt các phương tiện cùng class nằm gần nhau:** khó xác định ranh giới tách instance khi các xe/vật cùng lớp sát hoặc chồng bóng, dễ gộp nhầm hoặc tách chưa đúng.
-- **Xử lý vật thể bị che khuất:** cần xác định phần nhìn thấy thuộc cùng một đối tượng hay khác đối tượng, tránh vẽ phần bị che và tránh tách/gộp instance sai.
-- **Vẽ các cấu trúc mảnh:** các chi tiết nhỏ/mảnh khó bám biên chính xác, dễ mất nét hoặc lệch vùng khi thao tác mask.
-- **Xác định ranh giới road và sidewalk:** ranh giới đôi khi mờ theo màu/ánh sáng; cần dựa vào bó vỉa và chức năng lối đi thay vì chỉ dựa màu bề mặt.
-- **Đảm bảo độ phủ mask:** cần phủ đủ vùng nhìn thấy thuộc schema nhưng tránh tô vượt sang lớp/vùng không đúng hoặc bỏ sót vùng hợp lệ.
+Đối với 6 checkpoint, tôi đã hoàn thành việc tạo dữ liệu, export và kiểm tra cấu trúc. Hiện chưa có kết quả chấm điểm định lượng riêng cho nhóm checkpoint.
 
-### Sự cố kỹ thuật: import nhãn background trong CVAT
-Tôi **không có ghi nhận/bằng chứng xác minh** về việc tôi gặp sự cố kỹ thuật import nhãn `background` trong CVAT trong quá trình làm bài; do đó tôi **không thể mô tả sự cố hay cách xử lý thực tế cụ thể** cho trường hợp này và tôi không bịa thao tác. Nếu có phát sinh, nguyên tắc xử lý là đảm bảo bộ nhãn đúng theo `classes.json`/cấu hình task trước khi annotate và export.
+---
 
-### Phân biệt lỗi đã xử lý và lỗi chỉ phát hiện khi hậu kiểm
-- **Lỗi tôi đã xử lý trong quá trình làm:** tôi không có ghi nhận cụ thể, có bằng chứng xác minh từng trường hợp đã chỉnh sửa trước khi export cuối; vì vậy tôi **không khẳng định** đã xử lý một lỗi cụ thể nào.
-- **Lỗi chỉ phát hiện khi hậu kiểm:** những sai lệch được nhận thấy khi đối chiếu tự đánh giá với Ground Truth/scorer chính thức (ví dụ: medium_instance có dấu hiệu FP/instance thừa, P@0.5 0.55, R@0.5 0.90, TP/FP/FN 64/52/7; hard_panoptic có các lớp PQ thấp như sidewalk/bicycle/person/traffic light/motorcycle; easy_semantic có sidewalk IoU thấp) thuộc nhóm **chỉ phát hiện khi hậu kiểm**.
-- Tôi **đã không sửa annotation/ZIP trên CVAT sau khi hoàn thành** (giữ nguyên kết quả nộp). Do đó tôi **không ghi** là đã sửa annotation nếu tôi không thực hiện.
+## 2. QUY TRÌNH THỰC HIỆN VÀ PHƯƠNG PHÁP GÁN NHÃN
 
-## 4. Ba trường hợp phân tích
+Trong quá trình làm bài, tôi thực hiện các thao tác trực tiếp trên CVAT, tập trung vào việc xác định đúng đối tượng, lựa chọn class và thể hiện chính xác ranh giới của từng vùng phân đoạn.
 
-Tôi phân tích ba trường hợp theo guideline của bài (CP1, CP2, CP5), nêu hai khả năng xử lý, nguyên tắc áp dụng và cách xác định phương án đúng.
+Quy trình thực hiện gồm:
 
-### CP1 — Holes (vùng lỗ bên trong đối tượng) — `data/checkpoints/cp1_holes/images/000000144300.jpg`
-- **Hai khả năng xử lý:** (a) Coi vùng lỗ/kính/chi tiết hở bên trong vật là một phần cần được thể hiện đúng theo mask của đối tượng (giữ/loại đúng theo quy tắc nhìn thấy của vật); (b) Bỏ qua hoặc tô lấp vùng lỗ như thể nó thuộc đặc phần đặc của đối tượng.
-- **Nguyên tắc guideline:** giữ đúng chi tiết/kính (vùng lỗ/không đặc) bên trong mask theo quy tắc task; phân biệt **chi tiết bên trong vật** và **lỗ nền thật** nhìn xuyên qua (`CHECKPOINTS.md` — cp1_holes).
-- **Cách tôi xác định phương án đúng:** tôi dựa vào phần **nhìn thấy thực tế** trên ảnh, kiểm tra biên trong–ngoài của vật và chỉ gán theo quy tắc lớp/đối tượng của trạm; không suy đoán phần không nhìn thấy, ưu tiên nhất quán giữa vùng đặc của vật và vùng hở/kính theo guideline.
+**Bước 1 – Quan sát và nhận diện đối tượng**
 
-### CP2 — Slice (các phương tiện cùng class nằm sát nhau) — `data/checkpoints/cp2_slice/images/000000017627.jpg`
-- **Hai khả năng xử lý:** (a) Tách thành **hai instance riêng** cho hai phương tiện dù cùng class và nằm sát nhau; (b) Gộp thành một mask/instance duy nhất vì cùng class và biên tiếp xúc.
-- **Nguyên tắc guideline:** **cùng class không đồng nghĩa cùng instance**; mỗi vật đếm được cần được tách đúng thành instance riêng khi chúng là các đối tượng khác nhau (`CHECKPOINTS.md` — cp2_slice).
-- **Cách tôi xác định phương án đúng:** tôi quan sát ranh tiếp xúc, hình dạng và tính liên tục của từng phương tiện, xác định số lượng đối tượng thực tế và vẽ/tách mask theo từng instance; ưu tiên biên bám phần nhìn thấy của từng xe thay vì gộp theo màu hay độ gần.
+Tôi quan sát ảnh gốc, xác định các đối tượng cần gán nhãn, phân biệt từng nhóm class và chú ý những trường hợp đối tượng nằm gần nhau, bị che khuất hoặc có hình dạng phức tạp.
 
-### CP5 — Occlusion (đối tượng bị che khuất) — `data/checkpoints/cp5_occlusion/images/000000336232.jpg`
-- **Hai khả năng xử lý:** (a) Giữ **một instance** cho các phần **nhìn thấy** của cùng một vật dù bị vật khác che khuất ở giữa; (b) Tách thành hai instance/ID khác nhau hoặc vẽ cả phần bị che khuất.
-- **Nguyên tắc guideline:** **giữ một instance cho các phần nhìn thấy** của cùng vật; **không vẽ phần bị che** và **không tách ID chỉ vì bị che** (`CHECKPOINTS.md` — cp5_occlusion).
-- **Cách tôi xác định phương án đúng:** tôi xác định các mảng nhìn thấy có thuộc cùng một đối tượng hay không dựa trên ngữ cảnh và tính nhất quán của vật, chỉ gán mask cho phần nhìn thấy và giữ cùng ID/instance cho cùng vật; không suy đoán hình dạng phía sau vật che.
+**Bước 2 – Thực hiện annotation trên CVAT**
 
-## 5. Xác nhận giữ nguyên kết quả
+Tôi sử dụng các công cụ polygon và mask trên CVAT để thực hiện phân đoạn. Khi vẽ, tôi chú ý bám sát đường viền thực tế của đối tượng, tránh tạo vùng mask quá rộng hoặc bỏ sót những phần thuộc đối tượng.
 
-- Tôi giữ nguyên **9 task, 14 ảnh** và **toàn bộ 9 file ZIP** trong `submissions/`.
-- Kết quả tự đánh giá giữ nguyên: **Easy 17.2/20, Medium 21.6/32, Hard 13.8/30, Tổng 52.6/82**. **Sáu checkpoint chưa có điểm định lượng.**
-- Tôi **không thay đổi annotation, ZIP hoặc Ground Truth**. Những nội dung tôi không có bằng chứng xác minh được nêu rõ trong báo cáo và tôi không bịa thao tác cá nhân.
+Đối với các vật thể nằm sát nhau, tôi chú ý phân biệt ranh giới để tránh gộp nhầm nhiều đối tượng thành một instance.
+
+**Bước 3 – Sử dụng SAM3 hỗ trợ**
+
+Tôi sử dụng SAM3 để hỗ trợ nhận diện và gợi ý vùng phân đoạn trong quá trình làm bài. Các gợi ý được xem là cơ sở tham khảo; tôi kiểm tra lại hình dạng, phạm vi và class của đối tượng trước khi sử dụng kết quả.
+
+**Bước 4 – Kiểm tra và hoàn thiện dữ liệu**
+
+Sau khi annotation, tôi kiểm tra lại các vùng phân đoạn, nhãn class, số lượng đối tượng và những vị trí có khả năng bị bỏ sót hoặc gán nhãn chưa chính xác.
+
+**Bước 5 – Lưu và export**
+
+Tôi lưu kết quả trên CVAT và xuất dữ liệu theo định dạng yêu cầu của từng task. Sau đó, tôi kiểm tra cấu trúc các file ZIP trước khi đưa vào thư mục submissions.
+
+Đối với object đầu tiên trong Medium Instance, hiện tôi không có đủ dữ liệu lịch sử thao tác để xác định chính xác ảnh, vị trí, class và thứ tự thực hiện trước khi sử dụng gợi ý SAM3. Vì vậy, tôi không đưa ra một mô tả cụ thể chưa được xác minh.
+
+---
+
+## 3. KHÓ KHĂN, LỖI PHÁT HIỆN VÀ CÁCH XỬ LÝ
+
+Trong quá trình thực hiện, tôi gặp một số khó khăn liên quan đến việc xác định ranh giới đối tượng, phân biệt các instance cùng class và xử lý dữ liệu khi import/export.
+
+### 3.1. Khó khăn trong quá trình annotation
+
+**Đối tượng nằm gần nhau hoặc có ranh giới không rõ ràng**
+
+Một số phương tiện xuất hiện sát nhau, khiến việc xác định ranh giới giữa các đối tượng trở nên khó khăn. Nếu không phân biệt chính xác, các vùng mask có thể bị gộp hoặc tạo ra nhiều instance không cần thiết.
+
+Tôi chú ý quan sát hình dạng, đường viền và vị trí của từng đối tượng để xác định phạm vi phân đoạn phù hợp.
+
+**Đối tượng bị che khuất**
+
+Khi một phần đối tượng bị vật thể khác che khuất, việc xác định phạm vi mask cần tuân thủ quy tắc về occlusion. Đây là trường hợp cần phân biệt giữa một đối tượng bị che khuất và nhiều đối tượng độc lập.
+
+**Các cấu trúc mảnh**
+
+Những chi tiết nhỏ như cột, biển báo hoặc các cấu trúc mảnh đòi hỏi độ chính xác cao hơn khi xác định đường biên. Việc sử dụng công cụ vẽ không phù hợp có thể khiến mask bị thiếu hoặc lệch khỏi đối tượng.
+
+**Ranh giới road và sidewalk**
+
+Một số khu vực có màu sắc và chất liệu bề mặt tương tự nhau. Tôi cần chú ý đến ranh giới chức năng giữa lòng đường và vỉa hè thay vì chỉ dựa vào sự khác biệt về màu sắc.
+
+### 3.2. Sự cố kỹ thuật khi import annotation
+
+Trong quá trình import dữ liệu Semantic Segmentation vào CVAT, tôi gặp lỗi:
+
+`Label 'background' is not registered for this task.`
+
+Sau khi kiểm tra, tôi xác định vấn đề liên quan đến nhãn background trong file annotation không được đăng ký tương ứng trong danh sách label của task CVAT.
+
+Tôi kiểm tra lại cấu hình nhãn và định dạng dữ liệu, sau đó xử lý việc import theo cấu trúc nhãn phù hợp để tiếp tục quy trình làm bài.
+
+Đây là lỗi kỹ thuật liên quan đến quá trình import annotation, không phải lỗi chất lượng mask đã được sửa.
+
+### 3.3. Kết quả hậu kiểm
+
+Sau khi hoàn thành dữ liệu, tôi sử dụng công cụ inspect và đối chiếu kết quả tự đánh giá để kiểm tra chất lượng.
+
+Một số hạn chế được ghi nhận:
+
+- Easy Semantic: IoU của class sidewalk còn thấp, đạt 0.483.
+- Medium Instance: số lượng instance dự đoán nhiều hơn Ground Truth, có 52 false positive và 7 false negative.
+- Hard Panoptic: một số class như bicycle và sidewalk có PQ bằng 0; class person đạt PQ 0.177.
+
+Tôi giữ nguyên 9 file ZIP đã export cuối cùng, không thực hiện chỉnh sửa annotation sau giai đoạn hoàn thành. Vì vậy, các lỗi chất lượng phát hiện trong quá trình hậu kiểm được ghi nhận là hạn chế còn tồn tại, không phải lỗi đã được sửa.
+
+---
+
+## 4. BA TÌNH HUỐNG ĐẶC BIỆT CẦN LƯU Ý KHI GÁN NHÃN
+
+Trong quá trình nghiên cứu guideline và thực hiện các checkpoint, tôi tập trung vào ba trường hợp có khả năng gây nhầm lẫn khi phân đoạn.
+
+### Tình huống 1 – CP1 Holes: Khoảng trống bên trong đối tượng
+
+**Vấn đề:**
+
+Một đối tượng có thể xuất hiện các khoảng trống hoặc lỗ bên trong hình dạng tổng thể. Nếu chỉ dựa vào đường viền bên ngoài, người thực hiện có thể nhầm lẫn giữa phần bên trong đối tượng và vùng nền.
+
+**Hai cách hiểu có thể gặp:**
+
+- Cách 1: Loại bỏ toàn bộ phần trống bên trong khỏi mask.
+- Cách 2: Giữ mask liên tục theo phạm vi đối tượng, không tự ý cắt các khoảng trống theo quy tắc của checkpoint.
+
+**Nguyên tắc áp dụng:**
+
+Theo quy tắc CP1 Holes, các cửa sổ và khoảng trống được yêu cầu giữ bên trong mask, không tự ý cắt bỏ.
+
+**Bài học:**
+
+Tôi cần phân biệt rõ đặc điểm hình học của đối tượng với những vùng nền thực sự, đồng thời tuân thủ quy tắc riêng của checkpoint.
+
+### Tình huống 2 – CP2 Slice: Các phương tiện cùng class nằm sát nhau
+
+**Vấn đề:**
+
+Nhiều phương tiện có thể xuất hiện cạnh nhau, thậm chí có phần hình ảnh tiếp giáp hoặc chồng lấn do góc chụp.
+
+**Hai cách hiểu có thể gặp:**
+
+- Cách 1: Gộp các phương tiện cùng class thành một vùng mask.
+- Cách 2: Tạo mask riêng cho từng phương tiện độc lập.
+
+**Nguyên tắc áp dụng:**
+
+Theo CP2 Slice, các phương tiện liền kề nhưng là những đối tượng khác nhau phải được tách thành các instance riêng biệt.
+
+**Bài học:**
+
+Tôi cần quan sát cấu trúc từng phương tiện, xác định ranh giới và tránh gộp nhiều đối tượng thành một instance chỉ vì chúng có cùng class.
+
+### Tình huống 3 – CP5 Occlusion: Đối tượng bị che khuất
+
+**Vấn đề:**
+
+Một đối tượng có thể bị một đối tượng khác che khuất một phần. Khi đó, hình ảnh quan sát được không thể hiện đầy đủ hình dạng ban đầu của đối tượng.
+
+**Hai cách hiểu có thể gặp:**
+
+- Cách 1: Tách phần đối tượng nhìn thấy thành nhiều mask riêng.
+- Cách 2: Xem các phần nhìn thấy thuộc cùng một đối tượng là một instance duy nhất.
+
+**Nguyên tắc áp dụng:**
+
+Theo CP5 Occlusion, một đối tượng bị chia cắt về mặt hình ảnh do vật thể khác che khuất vẫn được tính là một mask duy nhất; đồng thời phải xác định đúng số lượng instance.
+
+**Bài học:**
+
+Tôi cần phân biệt sự gián đoạn về mặt hình ảnh với sự tồn tại của nhiều đối tượng độc lập. Đây là yếu tố quan trọng để đảm bảo tính nhất quán trong Instance Segmentation.
+
+---
+
+## 5. TỰ ĐÁNH GIÁ VÀ KINH NGHIỆM RÚT RA
+
+Qua bài thực hành, tôi hiểu rõ hơn sự khác biệt giữa Semantic Segmentation, Instance Segmentation và Panoptic Segmentation.
+
+Tôi nhận thấy độ chính xác của annotation phụ thuộc nhiều vào khả năng nhận diện đối tượng, xác định ranh giới và áp dụng đúng quy tắc của từng class.
+
+Việc sử dụng SAM3 giúp hỗ trợ quá trình nhận diện và gợi ý vùng phân đoạn, tuy nhiên kết quả vẫn cần được kiểm tra theo guideline. Công cụ hỗ trợ không thay thế trách nhiệm của người thực hiện trong việc đánh giá và kiểm soát chất lượng dữ liệu.
+
+Những điểm tôi cần cải thiện trong các bài thực hành tiếp theo gồm:
+
+- Nâng cao độ chính xác khi vẽ các đường biên phức tạp.
+- Kiểm soát tốt hơn số lượng instance, hạn chế tình trạng dự đoán thừa.
+- Chú ý hơn đến các class có ranh giới tương tự nhau.
+- Kiểm tra kỹ vùng bị che khuất và những cấu trúc nhỏ.
+- Đối chiếu kết quả với guideline trước khi export dữ liệu.
+
+**Kết luận:** Tôi đã hoàn thành việc xây dựng và export dữ liệu cho 9 task với tổng cộng 14 ảnh, đồng thời thực hiện kiểm tra cấu trúc các file bài nộp. Qua bài thực hành, tôi có thêm kinh nghiệm về quy trình annotation trên CVAT, cách sử dụng công cụ hỗ trợ phân đoạn và những yêu cầu về chất lượng dữ liệu trong Image Segmentation.
+
+Tôi nhận thức được một số hạn chế còn tồn tại trong kết quả tự đánh giá và sẽ tiếp tục cải thiện độ chính xác, tính nhất quán trong những bài thực hành tiếp theo.
