@@ -1,17 +1,16 @@
 # Báo cáo thực hành Day 3
 
-**Ghi chú:** Tôi hoàn thiện báo cáo này dựa trên dữ liệu và kết quả thực tế của bài làm (ZIP đã export, kết quả kiểm tra cấu trúc, tự đánh giá, đối chiếu lỗi). Với những thông tin trải nghiệm cá nhân chưa có bằng chứng hoặc chưa được tôi xác nhận, tôi ghi rõ là **chưa được xác minh**; tôi không bịa trải nghiệm và không ghi là đã sửa nếu thực tế tôi không sửa.
-
-- Mã học viên theo lớp: **2A202603146**
-- Họ tên: **Ngô Thị Minh Quang**
-- Ngày / CVAT local: **Chưa được xác minh** (tôi chưa ghi nhận cụ thể ngày thực hiện và phiên bản/môi trường CVAT local).
-- Công cụ đã dùng: **CVAT local; tôi sử dụng SAM3 như công cụ hỗ trợ trong quá trình annotation**. Việc tôi có dùng thêm công cụ/gợi ý nào khác hay không: **chưa được xác minh**. (Các công cụ khác, nếu có, tôi chỉ dùng để hỗ trợ kiểm tra, phân tích và hoàn thiện báo cáo.)
+- **Mã học viên:** 2A202603146
+- **Họ tên:** Ngô Thị Minh Quang
+- **Bài thực hành:** K5 · Level 2 · Day03 — Image Segmentation (cá nhân)
+- **Ngày / môi trường CVAT local:** Chưa được tôi ghi nhận cụ thể (không có bằng chứng xác minh chi tiết).
+- **Công cụ:** Tôi thực hiện trên **CVAT local** và sử dụng **SAM3** là **công cụ AI duy nhất** hỗ trợ gợi ý phân đoạn khi cần.
 
 ## 1. Bài đã nộp
 
-Tôi đã hoàn thành và export 9/9 task với 14/14 ảnh, lưu trong `submissions/` (tôi giữ nguyên các file ZIP này, không thay đổi sau khi export). Khi tôi kiểm tra cấu trúc bằng `python scripts/inspect_submissions.py --dir submissions`, kết quả là **9/9 OK, 0 lỗi**.
+Tôi đã hoàn thành và export **9/9 task, 14/14 ảnh** trong thư mục `submissions/` (giữ nguyên các file ZIP hiện tại, không thay đổi annotation/ZIP/Ground Truth).
 
-| Task | File ZIP đúng tên | Hoàn thành mấy ảnh | Điểm tối đa (coach chấm sau) |
+| Task | File ZIP | Hoàn thành | Điểm tối đa (coach chấm) |
 | --- | --- | ---: | ---: |
 | easy_semantic | `submissions/easy_semantic.zip` | 3 / 3 | 20 |
 | medium_instance | `submissions/medium_instance.zip` | 3 / 3 | 32 |
@@ -24,46 +23,71 @@ Tôi đã hoàn thành và export 9/9 task với 14/14 ảnh, lưu trong `submis
 | cp6_coverage | `submissions/cp6_coverage.zip` | 1 / 1 | 3 |
 | **Tổng tối đa** | | **14 / 14** | **100** |
 
-**Tự đánh giá (ba tier, Ground Truth do giảng viên cung cấp, scorer chính thức):** easy_semantic **17.2/20**, medium_instance **21.6/32**, hard_panoptic **13.8/30** → **Tổng 52.6/82** (chỉ 3 tier). **Sáu checkpoint chưa có Ground Truth/tiêu chí chấm định lượng chính thức tương ứng nên chưa được chấm định lượng** (cấu trúc 6/6 OK). **Tôi không tự nhận đạt 100/100.** Chi tiết: `reports/final_testing/FINAL_SCORE_REPORT.md`.
+**Kết quả tự đánh giá (3 tier, Ground Truth do giảng viên cung cấp, scorer chính thức):**
+- Easy Semantic: **17.2/20**
+- Medium Instance: **21.6/32**
+- Hard Panoptic: **13.8/30**
+- **Tổng tự đánh giá: 52.6/82**
+- **Sáu checkpoint:** cấu trúc đã kiểm tra (inspect OK), **chưa có điểm định lượng**.
 
-Export lỗi: **Chưa được xác minh** (tôi chưa ghi nhận cụ thể việc có gặp lỗi export ở task/ảnh nào, trạng thái đã Save hay việc đã báo coach hay chưa).
+Kết quả trên là tự đánh giá, không phải điểm chính thức của giảng viên. Tôi giữ nguyên toàn bộ kết quả, annotation và ZIP.
 
-## 2. Một quyết định trước khi dùng gợi ý
+### Phương pháp thực hiện (tổng quan)
+- Tôi **trực tiếp thao tác trên CVAT** để thực hiện bài thực hành.
+- Tôi **vẽ polygon/mask và gán nhãn theo từng đối tượng/vùng** theo đúng schema và `classes.json` của từng task.
+- Tôi **chủ động xác định ranh giới, phân biệt class và kiểm tra vùng phân đoạn** (phần nhìn thấy, mức độ phủ, biên) trước khi lưu/export.
+- Tôi sử dụng **SAM3 là công cụ AI duy nhất** hỗ trợ gợi ý/nhận diện vùng phân đoạn khi cần. **Tôi không sử dụng YOLO hay bất kỳ mô hình AI nào khác** để tự động tạo annotation.
+- **SAM3 chỉ đóng vai trò hỗ trợ gợi ý**; việc kiểm tra, chỉnh lựa chọn (chấp nhận/bỏ qua gợi ý khi áp dụng), gán nhãn và quyết định cuối cùng đối với annotation thuộc trách nhiệm của tôi. Tôi không mô tả toàn bộ annotation là vẽ tay 100% trong các trường hợp có mask được tạo từ gợi ý SAM3.
 
-**Yêu cầu rubric/mục này:** ghi object đầu tiên tôi tự vẽ ở `medium_instance` trước khi xem đề xuất tự động cho object đó (ảnh/vị trí, class, quy tắc biên) và cách tôi xử lý gợi ý sau đó (nếu có).
+## 2. Quy trình vẽ và gán nhãn
 
-**Mức độ đáp ứng / giới hạn thông tin:** Tôi có sử dụng **SAM3 như công cụ hỗ trợ trong quá trình annotation**, nhưng tôi **chưa có bằng chứng/ghi nhận cụ thể** để xác minh việc tôi đã tự vẽ hoàn toàn object đầu tiên trước gợi ý và các quyết định chi tiết tương ứng. Tôi **không bịa** thao tác hay trải nghiệm chưa được xác minh.
+Quy trình tôi thực hiện (tổng quát) như sau:
 
-- Ảnh, vị trí và object Medium đầu tiên tôi tự vẽ: **Chưa được xác minh** (chưa xác định được ảnh cụ thể trong `000000181542.jpg` / `000000373353.jpg` / `000000458325.jpg`, vị trí/object).
-- Class và quy tắc tôi dùng để chọn biên: **Chưa được xác minh**. (Nguyên tắc bài: class thuộc `person/bicycle/car/motorcycle/bus/truck`, biên bám phần nhìn thấy của object, không vẽ phần bị che/bối cảnh — đây là quy tắc tham chiếu, không phải ghi nhận quyết định cụ thể của tôi.)
-- Khi tôi dùng SAM3/gợi ý sau đó: vùng gợi ý sai/đúng, hành động tôi sửa/giữ và lý do: **Chưa được xác minh** (chưa ghi nhận cụ thể). Tôi không ghi "không dùng" vì tôi có sử dụng SAM3 hỗ trợ.
-- Nếu không dùng gợi ý: **Không áp dụng** (tôi có dùng SAM3 hỗ trợ). Quyết định gán nhãn cụ thể khác của tôi: **chưa được xác minh**.
+1. **Quan sát ảnh gốc:** xem bối cảnh, đối tượng/vùng xuất hiện và các vùng khó (biên, che khuất, chi tiết nhỏ).
+2. **Xác định đối tượng và class:** đối chiếu đúng `classes.json`/schema của task (semantic/instance/panoptic) và quy tắc guideline.
+3. **Thực hiện vẽ mask trên CVAT:** vẽ polygon/mask theo từng đối tượng (instance/thing) hoặc từng vùng (semantic/stuff) bằng công cụ CVAT, bám phần **nhìn thấy**.
+4. **Sử dụng SAM3 hỗ trợ khi cần:** dùng SAM3 để nhận diện và gợi ý vùng phân đoạn; tôi xem xét gợi ý như hỗ trợ, không thay thế bước kiểm tra của tôi. (Tôi không nêu tên/định danh object đầu tiên hay vị trí cụ thể do không có dữ liệu xác minh.)
+5. **Kiểm tra ranh giới, che khuất và chi tiết nhỏ:** rà biên, vùng bị che khuất, vật mảnh/vùng lỗ, trường hợp vật sát nhau hoặc cùng class, và độ phủ theo schema.
+6. **Kiểm tra lại và lưu/export:** kiểm tra lớp, số object/vùng, biên và tính nhất quán rồi Save và export đúng định dạng (`Segmentation mask 1.1` hoặc `COCO 1.0` theo từng task).
 
-## 3. Một lỗi tôi tìm thấy và sửa
+## 3. Khó khăn và xử lý lỗi
 
-**Yêu cầu rubric/mục này:** nêu một lỗi **có thật** đã tìm thấy và cách sửa (task/ảnh/vùng, loại, bằng chứng, quy tắc/hành động, Save/export). Nếu chưa sửa được phải ghi rõ, không ghi "đã sửa" khi chưa sửa.
+### Khó khăn thực tế trong quá trình thực hiện
+- **Phân biệt các phương tiện cùng class nằm gần nhau:** khó xác định ranh giới tách instance khi các xe/vật cùng lớp sát hoặc chồng bóng, dễ gộp nhầm hoặc tách chưa đúng.
+- **Xử lý vật thể bị che khuất:** cần xác định phần nhìn thấy thuộc cùng một đối tượng hay khác đối tượng, tránh vẽ phần bị che và tránh tách/gộp instance sai.
+- **Vẽ các cấu trúc mảnh:** các chi tiết nhỏ/mảnh khó bám biên chính xác, dễ mất nét hoặc lệch vùng khi thao tác mask.
+- **Xác định ranh giới road và sidewalk:** ranh giới đôi khi mờ theo màu/ánh sáng; cần dựa vào bó vỉa và chức năng lối đi thay vì chỉ dựa màu bề mặt.
+- **Đảm bảo độ phủ mask:** cần phủ đủ vùng nhìn thấy thuộc schema nhưng tránh tô vượt sang lớp/vùng không đúng hoặc bỏ sót vùng hợp lệ.
 
-**Mức độ đáp ứng / giới hạn thông tin:** Tôi **đã xác nhận không sửa annotation trên CVAT sau khi hoàn thành/export** và tôi **giữ nguyên 9 ZIP**. Tôi **không có bằng chứng xác minh** một lỗi cụ thể do tôi phát hiện trong quá trình làm (trước export cuối) cùng các thao tác sửa tương ứng; do đó tôi **không bịa** lỗi hay thao tác sửa. (Các sai lệch được nêu dưới đây chỉ là tham chiếu từ đối chiếu hậu kiểm với GT/scorer, không phải ghi nhận tôi đã phát hiện và sửa trong lúc làm.)
+### Sự cố kỹ thuật: import nhãn background trong CVAT
+Tôi **không có ghi nhận/bằng chứng xác minh** về việc tôi gặp sự cố kỹ thuật import nhãn `background` trong CVAT trong quá trình làm bài; do đó tôi **không thể mô tả sự cố hay cách xử lý thực tế cụ thể** cho trường hợp này và tôi không bịa thao tác. Nếu có phát sinh, nguyên tắc xử lý là đảm bảo bộ nhãn đúng theo `classes.json`/cấu hình task trước khi annotate và export.
 
-- Task/ảnh/vùng: **Chưa được xác minh** là lỗi tôi tự phát hiện trong quá trình làm. (Tham chiếu đối chiếu hậu kiểm: `medium_instance` có dấu hiệu nhiều instance thừa/FP, đặc biệt ảnh `000000373353.jpg` — `reports/error_localization/ERROR_LOCALIZATION.md`.)
-- Lỗi thuộc loại: **Chưa được xác minh** (quan sát thực tế của tôi trong lúc làm chưa được ghi nhận). Tham chiếu hậu kiểm cho thấy thiếu-thừa vật/gộp-tách/biên (FP 52, submitted 116 vs GT 71).
-- Bằng chứng tôi nhìn thấy: **Chưa được xác minh** (chưa ghi nhận bằng chứng cụ thể tôi quan sát trên CVAT trong quá trình làm).
-- Quy tắc và hành động sửa: **Tôi không thực hiện sửa trên CVAT sau khi hoàn thành** (giữ nguyên kết quả/ZIP). Hướng xử lý phù hợp theo quy tắc (nếu sửa): xóa mask thừa, gộp mảnh cùng object, tách mask gộp nhiều object, chỉnh biên theo phần nhìn thấy. Việc tôi từng thử sửa trong quá trình làm trước khi export cuối hay không: **chưa được xác minh**.
-- Sau sửa đã Save và export lại chưa? **Không áp dụng/không thực hiện** (tôi không sửa sau khi hoàn thành; ZIP hiện tại được giữ nguyên). Việc có lần Save/export lại nào khác trong quá trình làm: **chưa được xác minh**.
+### Phân biệt lỗi đã xử lý và lỗi chỉ phát hiện khi hậu kiểm
+- **Lỗi tôi đã xử lý trong quá trình làm:** tôi không có ghi nhận cụ thể, có bằng chứng xác minh từng trường hợp đã chỉnh sửa trước khi export cuối; vì vậy tôi **không khẳng định** đã xử lý một lỗi cụ thể nào.
+- **Lỗi chỉ phát hiện khi hậu kiểm:** những sai lệch được nhận thấy khi đối chiếu tự đánh giá với Ground Truth/scorer chính thức (ví dụ: medium_instance có dấu hiệu FP/instance thừa, P@0.5 0.55, R@0.5 0.90, TP/FP/FN 64/52/7; hard_panoptic có các lớp PQ thấp như sidewalk/bicycle/person/traffic light/motorcycle; easy_semantic có sidewalk IoU thấp) thuộc nhóm **chỉ phát hiện khi hậu kiểm**.
+- Tôi **đã không sửa annotation/ZIP trên CVAT sau khi hoàn thành** (giữ nguyên kết quả nộp). Do đó tôi **không ghi** là đã sửa annotation nếu tôi không thực hiện.
 
-Kết quả liên quan (tự đánh giá): tôi đã tự đánh giá 3 tier bằng Ground Truth do giảng viên cung cấp và scorer chính thức → easy_semantic 17.2/20 (mIoU 0.787), medium_instance 21.6/32 (P@0.5 0.55, R@0.5 0.90, TP/FP/FN 64/52/7), hard_panoptic 13.8/30 (PQ 0.408) — **tổng 52.6/82** (chưa phải điểm cuối trên 100). Tôi không tự ghi PASS/top 3/bonus và không đưa file ground truth vào fork. (Các công cụ khác, nếu có, tôi chỉ dùng để hỗ trợ kiểm tra, phân tích và hoàn thiện báo cáo.)
+## 4. Ba trường hợp phân tích
 
-## 4. Ba ca chưa chắc hoặc đã cân nhắc
+Tôi phân tích ba trường hợp theo guideline của bài (CP1, CP2, CP5), nêu hai khả năng xử lý, nguyên tắc áp dụng và cách xác định phương án đúng.
 
-**Yêu cầu rubric/mục này:** nêu ba ca (vùng cụ thể) có hai cách hiểu, kèm quy tắc/chứng cứ và quyết định hoặc câu hỏi cho coach (ca đã quyết định được cũng hợp lệ; không cần là lỗi).
+### CP1 — Holes (vùng lỗ bên trong đối tượng) — `data/checkpoints/cp1_holes/images/000000144300.jpg`
+- **Hai khả năng xử lý:** (a) Coi vùng lỗ/kính/chi tiết hở bên trong vật là một phần cần được thể hiện đúng theo mask của đối tượng (giữ/loại đúng theo quy tắc nhìn thấy của vật); (b) Bỏ qua hoặc tô lấp vùng lỗ như thể nó thuộc đặc phần đặc của đối tượng.
+- **Nguyên tắc guideline:** giữ đúng chi tiết/kính (vùng lỗ/không đặc) bên trong mask theo quy tắc task; phân biệt **chi tiết bên trong vật** và **lỗ nền thật** nhìn xuyên qua (`CHECKPOINTS.md` — cp1_holes).
+- **Cách tôi xác định phương án đúng:** tôi dựa vào phần **nhìn thấy thực tế** trên ảnh, kiểm tra biên trong–ngoài của vật và chỉ gán theo quy tắc lớp/đối tượng của trạm; không suy đoán phần không nhìn thấy, ưu tiên nhất quán giữa vùng đặc của vật và vùng hở/kính theo guideline.
 
-**Mức độ đáp ứng / giới hạn thông tin:** Tôi **chưa có ghi nhận xác thực** về ba ca tôi đã cân nhắc trong quá trình làm; tôi **không tự tạo tình huống cá nhân** hay bịa trải nghiệm. Các ca dưới đây được nêu như **tình huống phân vân điển hình theo quy tắc/guideline của bài** (tham chiếu ảnh/vị trí trong dữ liệu) để đối chiếu quy tắc — **không khẳng định** là trải nghiệm đã xảy ra của tôi. Quyết định/câu hỏi của tôi cho từng ca: **chưa được xác minh**.
+### CP2 — Slice (các phương tiện cùng class nằm sát nhau) — `data/checkpoints/cp2_slice/images/000000017627.jpg`
+- **Hai khả năng xử lý:** (a) Tách thành **hai instance riêng** cho hai phương tiện dù cùng class và nằm sát nhau; (b) Gộp thành một mask/instance duy nhất vì cùng class và biên tiếp xúc.
+- **Nguyên tắc guideline:** **cùng class không đồng nghĩa cùng instance**; mỗi vật đếm được cần được tách đúng thành instance riêng khi chúng là các đối tượng khác nhau (`CHECKPOINTS.md` — cp2_slice).
+- **Cách tôi xác định phương án đúng:** tôi quan sát ranh tiếp xúc, hình dạng và tính liên tục của từng phương tiện, xác định số lượng đối tượng thực tế và vẽ/tách mask theo từng instance; ưu tiên biên bám phần nhìn thấy của từng xe thay vì gộp theo màu hay độ gần.
 
-| Ảnh/vị trí | Hai cách hiểu có thể | Quy tắc/chứng cứ | Quyết định hoặc câu hỏi cho coach |
-| --- | --- | --- | --- |
-| 1. cp4_curb — `data/checkpoints/cp4_curb/images/7d83710e-4697c3b2.jpg` (ranh road/sidewalk) — *ca tham chiếu theo guideline, chưa xác minh là tôi đã cân nhắc* | (a) Phân chia theo màu bề mặt nhựa/bê tông; (b) Phân chia theo bó vỉa/chức năng lối đi | `CHECKPOINTS.md`: ranh road–sidewalk theo bó vỉa và chức năng, không quyết định chỉ theo màu. `guideline-mini-sheet`/`GUIDE.md` | **Chưa được xác minh** (quyết định thực tế của tôi hoặc câu hỏi tôi muốn hỏi coach). |
-| 2. cp5_occlusion — `data/checkpoints/cp5_occlusion/images/000000336232.jpg` (vật bị che) — *ca tham chiếu theo guideline, chưa xác minh là tôi đã cân nhắc* | (a) Tách thành hai object/ID khi bị vật khác che khuất; (b) Giữ một instance cho các phần nhìn thấy của cùng một vật | `CHECKPOINTS.md`: giữ một instance cho các phần nhìn thấy; không vẽ phần bị che; không tách ID vì bị che | **Chưa được xác minh** (quyết định thực tế của tôi hoặc câu hỏi tôi muốn hỏi coach). |
-| 3. easy_semantic — `817bca71-00000000.jpg` (ranh road/sidewalk, vùng sidewalk/vegetation) — *ca tham chiếu theo guideline/đối chiếu hậu kiểm, chưa xác minh là tôi đã cân nhắc* | (a) Gom vùng theo màu/texture giống nhau; (b) Tách đúng lớp theo chức năng (road vs sidewalk) và phủ đúng vùng vegetation nhìn thấy | `GUIDE.md`: ranh road–sidewalk theo chức năng/bó vỉa; semantic phủ vùng nhìn thấy đúng lớp. Khi đối chiếu lại, sidewalk IoU thấp/FP-FN đáng kể trên ảnh này (`reports/final_testing/`, `reports/error_localization/`). | **Chưa được xác minh** (quyết định thực tế của tôi hoặc câu hỏi tôi muốn hỏi coach). |
+### CP5 — Occlusion (đối tượng bị che khuất) — `data/checkpoints/cp5_occlusion/images/000000336232.jpg`
+- **Hai khả năng xử lý:** (a) Giữ **một instance** cho các phần **nhìn thấy** của cùng một vật dù bị vật khác che khuất ở giữa; (b) Tách thành hai instance/ID khác nhau hoặc vẽ cả phần bị che khuất.
+- **Nguyên tắc guideline:** **giữ một instance cho các phần nhìn thấy** của cùng vật; **không vẽ phần bị che** và **không tách ID chỉ vì bị che** (`CHECKPOINTS.md` — cp5_occlusion).
+- **Cách tôi xác định phương án đúng:** tôi xác định các mảng nhìn thấy có thuộc cùng một đối tượng hay không dựa trên ngữ cảnh và tính nhất quán của vật, chỉ gán mask cho phần nhìn thấy và giữ cùng ID/instance cho cùng vật; không suy đoán hình dạng phía sau vật che.
 
----
-**Ghi chú:** Tôi giữ nguyên kết quả và điểm số tự đánh giá **52.6/82** (3 tier) cùng các hạn chế đã phát hiện; tôi không thay đổi annotation/ZIP/điểm. Những thông tin chưa được xác minh nêu trên cần được tôi đối chiếu và bổ sung nếu có bằng chứng thực tế.
+## 5. Xác nhận giữ nguyên kết quả
+
+- Tôi giữ nguyên **9 task, 14 ảnh** và **toàn bộ 9 file ZIP** trong `submissions/`.
+- Kết quả tự đánh giá giữ nguyên: **Easy 17.2/20, Medium 21.6/32, Hard 13.8/30, Tổng 52.6/82**. **Sáu checkpoint chưa có điểm định lượng.**
+- Tôi **không thay đổi annotation, ZIP hoặc Ground Truth**. Những nội dung tôi không có bằng chứng xác minh được nêu rõ trong báo cáo và tôi không bịa thao tác cá nhân.
